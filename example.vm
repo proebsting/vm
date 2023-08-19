@@ -1,0 +1,34 @@
+// execute this file with the following command:
+// python3 -m tau.vm.vmcmd --file <filename>
+// or 
+// python3 -m tau.vm.vmcmd --file <filename> --verbose
+
+// simple example of printing a value
+push 4
+print
+
+// simple example of increasing the SP by 4
+pushSP 4
+popSP
+
+// simple example of storing 7 at location SP-2
+pushSP -2
+push 7
+st
+
+// simple example of loading the value at SP-2, adding 1, and storing it back
+pushSP -2
+ld
+push 1
+add
+
+pushSP -2
+swap // must swap because address must be lower on stack
+st
+
+// simple example of loading the value at SP-2, and printing it
+pushSP -2
+ld
+print
+
+halt

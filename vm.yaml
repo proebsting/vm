@@ -1,0 +1,184 @@
+- class: Label
+  short: lab
+  operands:
+    - name: label
+      type: str
+  stack:
+    before: []
+    after: []
+- class: Noop
+  short: noop
+  stack:
+    before: []
+    after: []
+- class: Jump
+  short: j
+  operands:
+    - name: label
+      type: str
+  stack:
+    before: []
+    after: []
+  side_effect:
+    - "PC = label"
+- class: JumpIfZero
+  short: jz
+  operands:
+    - name: label
+      type: str
+  stack:
+    before: ["v"]
+    after: []
+  side_effect:
+    - "if v == 0: PC = label"
+- class: JumpIfNotZero
+  short: jnz
+  operands:
+    - name: label
+      type: str
+  stack:
+    before: ["v"]
+    after: []
+  side_effect:
+    - "if v != 0: PC = label"
+- class: JumpIndirect
+  short: ji
+  stack:
+    before: ["v"]
+    after: []
+  side_effect:
+    - "PC = v"
+- class: Immediate
+  short: imm
+  operands:
+    - name: value
+      type: int
+  stack:
+    before: []
+    after: ["value"]
+- class: LoadLabel
+  short: llabel
+  operands:
+    - name: label
+      type: str
+  stack:
+    before: []
+    after: ["label"]
+- class: Move
+  short: move
+  stack:
+    before: ["x"]
+    after: ["x"]
+- class: Add
+  short: add
+  stack:
+    before: ["x", "y"]
+    after: ["x+y"]
+- class: AddImmediate
+  short: addi
+  operands:
+    - name: value
+      type: int
+  stack:
+    before: ["x"]
+    after: ["x+value"]
+- class: Sub
+  short: sub
+  stack:
+    before: ["x", "y"]
+    after: ["x-y"]
+- class: Mul
+  short: mul
+  stack:
+    before: ["x", "y"]
+    after: ["x*y"]
+- class: Div
+  short: div
+  stack:
+    before: ["x", "y"]
+    after: ["x//y"]
+- class: Negate
+  short: neg
+  stack:
+    before: ["v"]
+    after: ["-v"]
+- class: LessThan
+  short: lt
+  stack:
+    before: ["x", "y"]
+    after: ["int(x<y)"]
+- class: GreaterThan
+  short: gt
+  stack:
+    before: ["x", "y"]
+    after: ["int(x>y)"]
+- class: LessThanEqual
+  short: leq
+  stack:
+    before: ["x", "y"]
+    after: ["int(x<=y)"]
+- class: GreaterThanEqual
+  short: geq
+  stack:
+    before: ["x", "y"]
+    after: ["int(x>=y)"]
+- class: Equal
+  short: eq
+  stack:
+    before: ["x", "y"]
+    after: ["int(x==y)"]
+- class: NotEqual
+  short: neq
+  stack:
+    before: ["x", "y"]
+    after: ["int(x!=y)"]
+- class: Not
+  short: not
+  stack:
+    before: ["v"]
+    after: ["1 - v"]
+- class: Load
+  short: ld
+  stack:
+    before: ["address"]
+    after: ["memory[address]"]
+- class: Store
+  short: st
+  stack:
+    before: ["address", "v"]
+    after: []
+  side_effect:
+    - "memory[address] = v"
+- class: Print
+  short: print
+  stack:
+    before: ["v"]
+    after: []
+  side_effect:
+    - "print(v)"
+- class: CallIndirect
+  short: calli
+  stack:
+    before: ["v"]
+    after: []
+  side_effect:
+    - "RA = PC"
+    - "PC = v"
+- class: Call
+  short: call
+  operands:
+    - name: label
+      type: str
+  stack:
+    before: []
+    after: []
+  side_effect:
+    - "RA = PC"
+    - "PC = label"
+- class: Halt
+  short: halt
+  stack:
+    before: []
+    after: []
+  side_effect:
+    - "halt()"

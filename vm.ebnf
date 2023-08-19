@@ -1,0 +1,49 @@
+
+<< from .vm import * >>
+<< from .scanner import Token, Scanner >>
+
+%% start.return = "List[Insn]"
+start : {operation} .
+%% operation.return = "Insn"
+operation :
+      ("Label" | "lab") string'label  [","] comment'cmt =<< Label(label, cmt) >>
+    | ("Noop" | "noop") comment'cmt =<< Noop(cmt) >>
+    | ("Jump" | "j") string'label  [","] comment'cmt =<< Jump(label, cmt) >>
+    | ("JumpIfZero" | "jz") reg'v [","] string'label  [","] comment'cmt =<< JumpIfZero(v, label, cmt) >>
+    | ("JumpIfNotZero" | "jnz") reg'v [","] string'label  [","] comment'cmt =<< JumpIfNotZero(v, label, cmt) >>
+    | ("JumpIndirect" | "ji") reg'v [","] comment'cmt =<< JumpIndirect(v, cmt) >>
+    | ("Immediate" | "imm") reg'dst [","] integer'value  [","] comment'cmt =<< Immediate(dst, value, cmt) >>
+    | ("LoadLabel" | "llabel") reg'dst [","] string'label  [","] comment'cmt =<< LoadLabel(dst, label, cmt) >>
+    | ("Move" | "move") reg'dst [","] reg'x [","] comment'cmt =<< Move(dst, x, cmt) >>
+    | ("Add" | "add") reg'dst [","] reg'x [","] reg'y [","] comment'cmt =<< Add(dst, x, y, cmt) >>
+    | ("AddImmediate" | "addi") reg'dst [","] reg'x [","] integer'value  [","] comment'cmt =<< AddImmediate(dst, x, value, cmt) >>
+    | ("Sub" | "sub") reg'dst [","] reg'x [","] reg'y [","] comment'cmt =<< Sub(dst, x, y, cmt) >>
+    | ("Mul" | "mul") reg'dst [","] reg'x [","] reg'y [","] comment'cmt =<< Mul(dst, x, y, cmt) >>
+    | ("Div" | "div") reg'dst [","] reg'x [","] reg'y [","] comment'cmt =<< Div(dst, x, y, cmt) >>
+    | ("Negate" | "neg") reg'dst [","] reg'v [","] comment'cmt =<< Negate(dst, v, cmt) >>
+    | ("LessThan" | "lt") reg'dst [","] reg'x [","] reg'y [","] comment'cmt =<< LessThan(dst, x, y, cmt) >>
+    | ("GreaterThan" | "gt") reg'dst [","] reg'x [","] reg'y [","] comment'cmt =<< GreaterThan(dst, x, y, cmt) >>
+    | ("LessThanEqual" | "leq") reg'dst [","] reg'x [","] reg'y [","] comment'cmt =<< LessThanEqual(dst, x, y, cmt) >>
+    | ("GreaterThanEqual" | "geq") reg'dst [","] reg'x [","] reg'y [","] comment'cmt =<< GreaterThanEqual(dst, x, y, cmt) >>
+    | ("Equal" | "eq") reg'dst [","] reg'x [","] reg'y [","] comment'cmt =<< Equal(dst, x, y, cmt) >>
+    | ("NotEqual" | "neq") reg'dst [","] reg'x [","] reg'y [","] comment'cmt =<< NotEqual(dst, x, y, cmt) >>
+    | ("Not" | "not") reg'dst [","] reg'v [","] comment'cmt =<< Not(dst, v, cmt) >>
+    | ("Load" | "ld") reg'dst [","] reg'address [","] comment'cmt =<< Load(dst, address, cmt) >>
+    | ("Store" | "st") reg'address [","] reg'v [","] comment'cmt =<< Store(address, v, cmt) >>
+    | ("Print" | "print") reg'v [","] comment'cmt =<< Print(v, cmt) >>
+    | ("CallIndirect" | "calli") reg'v [","] comment'cmt =<< CallIndirect(v, cmt) >>
+    | ("Call" | "call") string'label  [","] comment'cmt =<< Call(label, cmt) >>
+    | ("Halt" | "halt") comment'cmt =<< Halt(cmt) >>
+    .
+
+%% string.return = "str"
+string : STR'tok =<< tok.value >> .
+
+%% reg.return = "str"
+reg : ID'tok =<< tok.value>> .
+
+%% integer.return = "int"
+integer : INT'tok =<< int(tok.value) >> .
+
+%% comment.return = "str"
+comment : ( string | =<<"">> ) .
